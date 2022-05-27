@@ -1,69 +1,55 @@
-from datetime import datetime
+import datetime
 
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    ListAPIView,
-    RetrieveAPIView,
-    RetrieveUpdateAPIView,
-)
+from rest_framework import generics
 
-from .models import Booking, Flight
-from .serializers import (
-    AdminUpdateBookingSerializer,
-    BookingDetailsSerializer,
-    BookingSerializer,
-    FlightSerializer,
-    RegisterSerializer,
-    UpdateBookingSerializer,
-)
+from flights import serializers
+from flights.models import Booking, Flight
 
 
-class FlightsList(ListAPIView):
+class FlightsList(generics.ListAPIView):
     queryset = Flight.objects.all()
-    serializer_class = FlightSerializer
+    serializer_class = serializers.FlightSerializer
 
 
-class BookingsList(ListAPIView):
-    serializer_class = BookingSerializer
+class BookingsList(generics.ListAPIView):
+    serializer_class = serializers.BookingSerializer
 
     def get_queryset(self):
-        return Booking.objects.filter(
-            user=self.request.user, date__gte=datetime.today()
-        )
+        today = datetime.date.today()
+        return Booking.objects.filter(user=self.request.user, date__gte=today)
 
 
-class BookingDetails(RetrieveAPIView):
+class BookingDetails(generics.RetrieveAPIView):
     queryset = Booking.objects.all()
-    serializer_class = BookingDetailsSerializer
+    serializer_class = serializers.BookingDetailsSerializer
     lookup_field = "id"
     lookup_url_kwarg = "booking_id"
 
 
-class UpdateBooking(RetrieveUpdateAPIView):
+class UpdateBooking(generics.RetrieveUpdateAPIView):
     queryset = Booking.objects.all()
     lookup_field = "id"
     lookup_url_kwarg = "booking_id"
 
     def get_serializer_class(self):
         if self.request.user.is_staff:
-            return AdminUpdateBookingSerializer
-        else:
-            return UpdateBookingSerializer
+            return serializers.AdminUpdateBookingSerializer
+
+        return serializers.UpdateBookingSerializer
 
 
-class CancelBooking(DestroyAPIView):
+class CancelBooking(generics.DestroyAPIView):
     queryset = Booking.objects.all()
     lookup_field = "id"
     lookup_url_kwarg = "booking_id"
 
 
-class BookFlight(CreateAPIView):
-    serializer_class = AdminUpdateBookingSerializer
+class BookFlight(generics.CreateAPIView):
+    serializer_class = serializers.AdminUpdateBookingSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, flight_id=self.kwargs["flight_id"])
 
 
-class Register(CreateAPIView):
-    serializer_class = RegisterSerializer
+class Register(generics.CreateAPIView):
+    serializer_class = serializers.RegisterSerializer

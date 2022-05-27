@@ -6,7 +6,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .models import Booking, Flight
+from flights.models import Booking, Flight
 
 
 class FlightListTest(APITestCase):

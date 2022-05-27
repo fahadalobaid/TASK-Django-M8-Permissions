@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Booking, Flight
+from flights.models import Booking, Flight
 
 
 class FlightSerializer(serializers.ModelSerializer):
