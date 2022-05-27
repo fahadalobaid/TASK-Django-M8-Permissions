@@ -2,7 +2,7 @@ Protect our views 🫣
 
 ## Steps
 
-1. Fork and clone [this repository](https://github.com/JoinCODED/REST_task_06/).
+1. Fork and clone [this repository](https://github.com/JoinCODED/TASK-Django-M8-Permissions).
 2. Create a virtual environment.
 3. Install the packages using `pip install -r requirements/dev.lock`.
 4. Adjust the permissions of the `BookingsList` and `BookFlight` so that only logged in users can access this view.
